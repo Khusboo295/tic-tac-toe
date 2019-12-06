@@ -48,7 +48,7 @@ public class TickTackToeExceptionHandler extends ResponseEntityExceptionHandler 
 		});
 		details = errors.values().stream().collect(Collectors.toList());
 		TickTackToeErrorResponse tickTackToeErrorResponse = new TickTackToeErrorResponse(
-				ErrorConstants.REQUEST_PAYLOAD_VALID, details, 400);
+				ErrorConstants.REQUEST_PAYLOAD_INVALID, details, 400);
 		return handleExceptionInternal(ex, tickTackToeErrorResponse, headers, status, request);
 	}
 

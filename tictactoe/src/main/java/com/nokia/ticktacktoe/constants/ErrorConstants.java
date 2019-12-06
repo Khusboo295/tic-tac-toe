@@ -19,5 +19,5 @@ public class ErrorConstants {
 	public static final String MOVE_FAILED = "Operation failed : ";
 	public static final String MOVE_NOT_VALID = "Move Not Valid!";
 	public static final String CHARACTER_NOT_VALID = "Incorrect Character! Please choice character between (x or o) ";
-	public static final String REQUEST_PAYLOAD_VALID = "Request Payload Invalid!";
+	public static final String REQUEST_PAYLOAD_INVALID = "Request Payload Invalid!";
 }
