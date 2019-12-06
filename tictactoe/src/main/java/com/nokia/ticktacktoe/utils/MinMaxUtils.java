@@ -1,13 +1,11 @@
 package com.nokia.ticktacktoe.utils;
 
+import com.nokia.ticktacktoe.constants.CommonConstants;
+
 /**
  * Implementing minmax algorithm to determine computer's smart move
  */
 public class MinMaxUtils {
-
-	static final int EMPTY = 0;
-	static final int NONE = 0;
-	static final int DRAW = 3;
 
 	/**
 	 * Default private constructor
@@ -20,7 +18,7 @@ public class MinMaxUtils {
 	 * MiniMax Algorithm, return each node score
 	 * 
 	 * @param modelUtils input ModelUtils module
-	 * @param side  player side
+	 * @param side       player side
 	 * @return evaluation function score
 	 */
 	public static double computerMove(ModelUtils modelUtils, int side, int user, int computer) {
@@ -36,7 +34,7 @@ public class MinMaxUtils {
 	/**
 	 * MaxScore return max score in the node
 	 * 
-	 * @param side  player side
+	 * @param side       player side
 	 * @param modelUtils input ModelUtils module
 	 * @return Max score for all current nodes
 	 */
@@ -83,7 +81,7 @@ public class MinMaxUtils {
 	 * Evaluate function, if Computer wins return 20, if Human wins return -20,
 	 * otherwise return 0
 	 * 
-	 * @param side  player side
+	 * @param side       player side
 	 * @param modelUtils input ModelUtils module
 	 * @return evaluate score
 	 */
@@ -113,11 +111,13 @@ public class MinMaxUtils {
 		int status = checkDiagonalsForWinner(board);
 		if (status == 1 || status == 2)
 			return status;
-		if (board[0][0] == EMPTY || board[0][1] == EMPTY || board[0][2] == EMPTY || board[1][0] == EMPTY
-				|| board[1][1] == EMPTY || board[1][2] == EMPTY || board[2][0] == EMPTY || board[2][1] == EMPTY
-				|| board[2][2] == EMPTY)
-			return NONE;
-		return DRAW;
+		if (board[0][0] == CommonConstants.EMPTY || board[0][1] == CommonConstants.EMPTY
+				|| board[0][2] == CommonConstants.EMPTY || board[1][0] == CommonConstants.EMPTY
+				|| board[1][1] == CommonConstants.EMPTY || board[1][2] == CommonConstants.EMPTY
+				|| board[2][0] == CommonConstants.EMPTY || board[2][1] == CommonConstants.EMPTY
+				|| board[2][2] == CommonConstants.EMPTY)
+			return CommonConstants.NONE;
+		return CommonConstants.STALEMATE;
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class MinMaxUtils {
 
 		if ((board[0][2] == board[1][1]) && (board[1][1] == board[2][0]))
 			return board[0][2];
-		return NONE;
+		return CommonConstants.NONE;
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class MinMaxUtils {
 
 		if ((board[0][2] == board[1][2]) && (board[1][2] == board[2][2]))
 			return board[0][2];
-		return NONE;
+		return CommonConstants.NONE;
 	}
 
 	/**
@@ -168,6 +168,6 @@ public class MinMaxUtils {
 
 		if ((board[2][0] == board[2][1]) && (board[2][1] == board[2][2]))
 			return board[2][0];
-		return NONE;
+		return CommonConstants.NONE;
 	}
 }

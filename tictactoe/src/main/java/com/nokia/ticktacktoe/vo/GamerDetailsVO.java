@@ -9,10 +9,10 @@ import com.nokia.ticktacktoe.validators.IsValidCharacters;
  */
 public class GamerDetailsVO {
 
-	@NotNull(message = "name cannot be null")
+	@NotNull(message = "name cannot be null!")
 	private String name;
 
-	@NotNull
+	@NotNull(message = "character cannot be null!")
 	@IsValidCharacters
 	private String character;
 

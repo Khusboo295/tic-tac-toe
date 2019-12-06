@@ -1,6 +1,8 @@
 package com.nokia.ticktacktoe.component;
 
 import com.nokia.ticktacktoe.configuration.EnableLogger;
+import com.nokia.ticktacktoe.constants.CommonConstants;
+import com.nokia.ticktacktoe.constants.ErrorConstants;
 import com.nokia.ticktacktoe.domain.TblGamerDetails;
 import com.nokia.ticktacktoe.exception.TickTackToeException;
 import com.nokia.ticktacktoe.repository.TblGamerDetailsRepository;
@@ -23,11 +25,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TickTackToeComponent {
 
-	static final int EMPTY = 0;
-	static final int NONE = 0;
 	int user = 1;
 	int computer = 2;
-	static final int DRAW = 3;
 	int[][] board = new int[3][3];
 	int winner;
 
@@ -48,9 +47,8 @@ public class TickTackToeComponent {
 		TblGamerDetails tblGamerDetails = new TblGamerDetails();
 		tblGamerDetails.setGamerName(gamerDetailsVO.getName());
 		tblGamerDetails.setGamerCharacter(gamerDetailsVO.getCharacter());
-		String initialState = "0,0,0,0,0,0,0,0,0";
-		tblGamerDetails.setGameState(initialState);
-		tblGamerDetails.setGameStatus("Game Started!!Your Turn!");
+		tblGamerDetails.setGameState(CommonConstants.INITIAL_BOARD_STATE);
+		tblGamerDetails.setGameStatus(CommonConstants.INITIAL_BOARD_STATUS);
 		return tblGamerDetails;
 	}
 
@@ -105,16 +103,16 @@ public class TickTackToeComponent {
 			board[(int) (move / 3)][move % 3] = turn;
 		}
 		winner = MinMaxUtils.checkWinner(board);
-		String gameStatus = "game ongoing, human’s turn";
-		if (winner != NONE) {
+		String gameStatus = CommonConstants.GAME_ONGOING_STATUS;
+		if (winner != CommonConstants.NONE) {
 			if (winner == user) {
-				gameStatus = "Human won!";
+				gameStatus = CommonConstants.HUMAN_WON;
 				updateGamerDetails(board, gameStatus, id);
 			} else if (winner == computer) {
-				gameStatus = "Computer won!";
+				gameStatus = CommonConstants.COMPUTER_WON;
 				updateGamerDetails(board, gameStatus, id);
 			} else {
-				gameStatus = "Draw!";
+				gameStatus = CommonConstants.DRAW;
 				updateGamerDetails(board, gameStatus, id);
 			}
 		} else {
@@ -175,7 +173,7 @@ public class TickTackToeComponent {
 			tblGamerDetails.get().setGameStatus(gameStatus);
 			tblGamerDetailsRepository.save(tblGamerDetails.get());
 		} else {
-			throw new TickTackToeException("InValid Game Id!", HttpStatus.BAD_REQUEST);
+			throw new TickTackToeException(ErrorConstants.INVALID_GAME_ID, HttpStatus.NOT_FOUND);
 		}
 	}
 

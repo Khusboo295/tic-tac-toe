@@ -2,6 +2,9 @@ package com.nokia.ticktacktoe.validators;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
+
+import com.nokia.ticktacktoe.constants.ErrorConstants;
+
 import java.lang.annotation.*;
 
 /**
@@ -12,7 +15,7 @@ import java.lang.annotation.*;
 @Documented
 @Constraint(validatedBy = { CharacterValidator.class })
 public @interface IsValidCharacters {
-	String message() default "Incorrect Character! Please choice character between (x or o) ";
+	String message() default ErrorConstants.CHARACTER_NOT_VALID;
 
 	Class<?>[] groups() default {};
 

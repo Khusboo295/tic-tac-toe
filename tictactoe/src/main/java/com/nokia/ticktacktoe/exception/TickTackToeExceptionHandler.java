@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.nokia.ticktacktoe.constants.ErrorConstants;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +47,8 @@ public class TickTackToeExceptionHandler extends ResponseEntityExceptionHandler 
 			errors.put(fieldName, errorMessage);
 		});
 		details = errors.values().stream().collect(Collectors.toList());
-		TickTackToeErrorResponse tickTackToeErrorResponse = new TickTackToeErrorResponse("Request Payload Invalid!",
-				details, 400);
+		TickTackToeErrorResponse tickTackToeErrorResponse = new TickTackToeErrorResponse(
+				ErrorConstants.REQUEST_PAYLOAD_VALID, details, 400);
 		return handleExceptionInternal(ex, tickTackToeErrorResponse, headers, status, request);
 	}
 

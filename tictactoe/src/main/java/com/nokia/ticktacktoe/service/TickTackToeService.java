@@ -2,6 +2,8 @@ package com.nokia.ticktacktoe.service;
 
 import com.nokia.ticktacktoe.component.TickTackToeComponent;
 import com.nokia.ticktacktoe.configuration.EnableLogger;
+import com.nokia.ticktacktoe.constants.CommonConstants;
+import com.nokia.ticktacktoe.constants.ErrorConstants;
 import com.nokia.ticktacktoe.domain.TblGamerDetails;
 import com.nokia.ticktacktoe.exception.TickTackToeException;
 import com.nokia.ticktacktoe.repository.TblGamerDetailsRepository;
@@ -12,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 @EnableLogger(logArgs = true, logReturns = true)
 public class TickTackToeService {
 
-	static final int EMPTY = 0;
 	int user = 1;
 	int computer = 2;
 
@@ -49,11 +49,8 @@ public class TickTackToeService {
 			TblGamerDetails tblGamerDetails = tblGamerDetailsRepository
 					.save(tickTackToeComponent.mapVoToEntity(gamerDetailsVO));
 			return tblGamerDetails.getId().intValue();
-		} catch (HibernateException ex) {
-			throw new TickTackToeException("Saving game details failed Due To DB Error : " + ex.getMessage(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception ex) {
-			throw new TickTackToeException("Saving game details failed : " + ex.getMessage(),
+			throw new TickTackToeException(ErrorConstants.SAVE_FAILED + ex.getMessage(),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -72,15 +69,12 @@ public class TickTackToeService {
 				int[][] boardGame = tickTackToeComponent.mapGameStateToArray(gameStates);
 				return TickTackToeComponent.printBoard(boardGame, tblGamerDetails.get().getGameStatus());
 			} else {
-				throw new TickTackToeException("InValid Game Id!", HttpStatus.NOT_FOUND);
+				throw new TickTackToeException(ErrorConstants.INVALID_GAME_ID, HttpStatus.NOT_FOUND);
 			}
-		} catch (HibernateException ex) {
-			throw new TickTackToeException("Retrieval of game details failed Due To DB Error : " + ex.getMessage(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (TickTackToeException ex) {
 			throw new TickTackToeException(ex.getMessage(), ex.getStatus());
 		} catch (Exception ex) {
-			throw new TickTackToeException("Retrieval of game details failed : " + ex.getMessage(),
+			throw new TickTackToeException(ErrorConstants.FETCH_FAILED + ex.getMessage(),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -95,23 +89,22 @@ public class TickTackToeService {
 	public String makeAMove(Long gameId, @Valid MoveDetailsVO moveDetailsVO) {
 		try {
 			TblGamerDetails tblGamerDetails = tblGamerDetailsRepository.findById(gameId).orElse(null);
-			if (tblGamerDetails != null) {
-				if (tblGamerDetails.getGameStatus().equalsIgnoreCase("Human won!")
-						|| tblGamerDetails.getGameStatus().equalsIgnoreCase("Draw!")
-						|| tblGamerDetails.getGameStatus().equalsIgnoreCase("Computer won!")) {
-					throw new TickTackToeException("Game Over!!", HttpStatus.BAD_REQUEST);
+			if (null != tblGamerDetails) {
+				if (tblGamerDetails.getGameStatus().equalsIgnoreCase(CommonConstants.HUMAN_WON)
+						|| tblGamerDetails.getGameStatus().equalsIgnoreCase(CommonConstants.DRAW)
+						|| tblGamerDetails.getGameStatus().equalsIgnoreCase(CommonConstants.COMPUTER_WON)) {
+					throw new TickTackToeException(ErrorConstants.GAME_OVER + tblGamerDetails.getGameStatus(),
+							HttpStatus.BAD_REQUEST);
 				}
 				return move(gameId, moveDetailsVO, tblGamerDetails);
 			} else {
-				throw new TickTackToeException("InValid Game Id!", HttpStatus.NOT_FOUND);
+				throw new TickTackToeException(ErrorConstants.INVALID_GAME_ID, HttpStatus.NOT_FOUND);
 			}
-		} catch (HibernateException ex) {
-			throw new TickTackToeException("Operation failed Due To DB Error : " + ex.getMessage(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (TickTackToeException ex) {
 			throw new TickTackToeException(ex.getMessage(), ex.getStatus());
 		} catch (Exception ex) {
-			throw new TickTackToeException("Operation failed : " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new TickTackToeException(ErrorConstants.MOVE_FAILED + ex.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -138,16 +131,16 @@ public class TickTackToeService {
 		String[] gameStates = tblGamerDetails.getGameState().split(",");
 		int[][] board = tickTackToeComponent.mapGameStateToArray(gameStates);
 		String gameResponseVO = null;
-		if (moveDetailsVO.getColumn() != null && moveDetailsVO.getRow() != null) {
+		if (null != moveDetailsVO.getColumn() && null != moveDetailsVO.getRow()) {
 			String rowColumn = moveDetailsVO.getRow().toUpperCase() + moveDetailsVO.getColumn().toUpperCase();
 			if (moveMap.containsKey(rowColumn) && !(moveMap.get(rowColumn) < 0 || moveMap.get(rowColumn) > 8
-					|| board[moveMap.get(rowColumn) / 3][moveMap.get(rowColumn) % 3] != EMPTY)) {
+					|| board[moveMap.get(rowColumn) / 3][moveMap.get(rowColumn) % 3] != CommonConstants.EMPTY)) {
 				user = tblGamerDetails.getGamerCharacter().equalsIgnoreCase("x") ? 1 : 2;
 				computer = user == 1 ? 2 : 1;
 				tickTackToeComponent.movePlayed(moveMap.get(rowColumn), board, user, gameId, user, computer);
 				gameResponseVO = getGameState(gameId);
 			} else {
-				throw new TickTackToeException("Move Not Valid!", HttpStatus.BAD_REQUEST);
+				throw new TickTackToeException(ErrorConstants.MOVE_NOT_VALID, HttpStatus.BAD_REQUEST);
 			}
 		}
 		user = 1;
