@@ -1,19 +1,19 @@
 package com.nokia.ticktacktoe.vo;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 /**
  * This VO is for receiving/returning MoveDetails from/to application
  */
 public class MoveDetailsVO {
 
-	@NotNull(message = "row cannot be null")
+	@NotBlank(message = "row cannot be blank")
 	private String row;
 
-	@NotNull(message = "column cannot be null")
+	@NotBlank(message = "column cannot be blank")
 	private String column;
 
-	public MoveDetailsVO(@NotNull String row, @NotNull String column) {
+	public MoveDetailsVO(String row, String column) {
 		super();
 		this.row = row;
 		this.column = column;

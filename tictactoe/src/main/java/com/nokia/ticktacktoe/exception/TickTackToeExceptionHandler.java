@@ -61,7 +61,7 @@ public class TickTackToeExceptionHandler extends ResponseEntityExceptionHandler 
 	 *         error response and Http status
 	 */
 	@ExceptionHandler(value = { TickTackToeException.class })
-	protected ResponseEntity<TickTackToeErrorResponse> handleCESAuthException(TickTackToeException ex) {
+	protected ResponseEntity<TickTackToeErrorResponse> handleTickTackToeException(TickTackToeException ex) {
 		List<String> details = new ArrayList<>();
 		details.add(ex.getStatus().toString());
 		TickTackToeErrorResponse tickTackToeErrorResponse = new TickTackToeErrorResponse(ex.getMessage(), details,

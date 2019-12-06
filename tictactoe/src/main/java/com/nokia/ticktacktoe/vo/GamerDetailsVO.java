@@ -1,7 +1,6 @@
 package com.nokia.ticktacktoe.vo;
 
-import javax.validation.constraints.NotNull;
-
+import javax.validation.constraints.NotBlank;
 import com.nokia.ticktacktoe.validators.IsValidCharacters;
 
 /**
@@ -9,14 +8,14 @@ import com.nokia.ticktacktoe.validators.IsValidCharacters;
  */
 public class GamerDetailsVO {
 
-	@NotNull(message = "name cannot be null!")
+	@NotBlank(message = "name cannot be blank!")
 	private String name;
 
-	@NotNull(message = "character cannot be null!")
+	@NotBlank(message = "character cannot be blank!")
 	@IsValidCharacters
 	private String character;
 
-	public GamerDetailsVO(@NotNull String name, @NotNull @IsValidCharacters String character) {
+	public GamerDetailsVO(String name, @IsValidCharacters String character) {
 		super();
 		this.name = name;
 		this.character = character;
