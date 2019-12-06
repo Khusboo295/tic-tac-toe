@@ -10,7 +10,7 @@ public class CommonConstants {
 	}
 
 	public static final String HUMAN_WON = "Human won!";
-	public static final String COMPUTER_WON = "Draw!";
+	public static final String COMPUTER_WON = "Computer Won!";
 	public static final String DRAW = "Draw!";
 	public static final int EMPTY = 0;
 	public static final int NONE = 0;
