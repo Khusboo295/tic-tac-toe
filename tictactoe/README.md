@@ -34,25 +34,31 @@ Fork this [repository](https://github.com/Khusboo295/tic-tac-toe.git)
 ## Play the Game
 	#Default application port: 8080
 #Using Swagger
-	# Start the Game : http://host:port/swagger-ui.html
-	# Enter your name and choose character: /nokia/ticktacktoe/game
-		Sample Request: {"name" : "Mati", "character" : "x"}
-		Sample Response: 1 (Id generated)
-	#Check the status: /nokia/ticktacktoe/{gameId}
-		gameId: Game Id generated
-		Sample Request URI: /nokia/ticktacktoe/1
-	#Make a move: /game/{gameId}/move
-		Sample Request URI:  /game/1/move
-		Sample Request Body: {"row" : "A", "column" : "B"}
+* Start the Game : http://host:port/swagger-ui.html
+* Enter your name and choose character: /nokia/ticktacktoe/game
+
+	 Sample Request: {"name" : "Mati", "character" : "x"}
+	 Sample Response: 1 (Id generated)
+* Check the status: /nokia/ticktacktoe/{gameId}
+
+	 gameId: Game Id generated
+	 Sample Request URI: /nokia/ticktacktoe/1
+* Make a move: /game/{gameId}/move
+
+	 Sample Request URI:  /game/1/move
+	 Sample Request Body: {"row" : "A", "column" : "B"}
 	
 #Using PostMan or any HTTP API interacting tool
-	# Enter your name and choose character: http://host:port/nokia/ticktacktoe/game
+* Enter your name and choose character: http://host:port/nokia/ticktacktoe/game
+
 		Sample Request: {"name" : "Mati", "character" : "x"}
 		Sample Response: 1 (Id generated)
-	#Check the status: http://host:port/nokia/ticktacktoe/{gameId}
+* Check the status: http://host:port/nokia/ticktacktoe/{gameId}
+
 		gameId: Game Id generated
 		Sample Request URI: /nokia/ticktacktoe/1
-	#Make a move: http://host:port/game/{gameId}/move
+* Make a move: http://host:port/game/{gameId}/move
+
 		Sample Request URI:  /game/1/move
 		Sample Request Body: {"row" : "A", "column" : "B"}
 
