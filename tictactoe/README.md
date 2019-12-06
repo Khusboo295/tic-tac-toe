@@ -6,7 +6,7 @@ Welcome to the TickTackToe Game, a simple web application allowing users to inte
 * [Maven 4](https://maven.apache.org/download.cgi)
 
 # Local set-up
-Fork this [repository](https://bitbucket-eng-bgl1.cisco.com/bitbucket/scm/ces-v2/ces_auth.git)
+Fork this [repository](https://github.com/Khusboo295/tic-tac-toe.git)
 
 ## [ EXPERIMENTAL ] Build & Deploy
 ```
