@@ -37,16 +37,16 @@ Fork this [repository](https://github.com/Khusboo295/tic-tac-toe.git)
 * Start the Game : http://host:port/swagger-ui.html
 * Enter your name and choose character: /nokia/ticktacktoe/game
 
-	 Sample Request: {"name" : "Mati", "character" : "x"}
-	 Sample Response: 1 (Id generated)
+		 Sample Request: {"name" : "Mati", "character" : "x"}
+		 Sample Response: 1 (Id generated)
 * Check the status: /nokia/ticktacktoe/{gameId}
 
-	 gameId: Game Id generated
-	 Sample Request URI: /nokia/ticktacktoe/1
+		 gameId: Game Id generated
+		 Sample Request URI: /nokia/ticktacktoe/1
 * Make a move: /game/{gameId}/move
 
-	 Sample Request URI:  /game/1/move
-	 Sample Request Body: {"row" : "A", "column" : "B"}
+		 Sample Request URI:  /game/1/move
+		 Sample Request Body: {"row" : "A", "column" : "B"}
 	
 #Using PostMan or any HTTP API interacting tool
 * Enter your name and choose character: http://host:port/nokia/ticktacktoe/game
