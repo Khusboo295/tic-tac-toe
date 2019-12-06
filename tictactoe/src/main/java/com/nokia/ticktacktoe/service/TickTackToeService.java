@@ -9,6 +9,8 @@ import com.nokia.ticktacktoe.vo.GamerDetailsVO;
 import com.nokia.ticktacktoe.vo.MoveDetailsVO;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
 import javax.validation.Valid;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,13 +66,13 @@ public class TickTackToeService {
 	 */
 	public String getGameState(Long gameId) {
 		try {
-			TblGamerDetails tblGamerDetails = tblGamerDetailsRepository.findById(gameId).orElse(null);
-			if (tblGamerDetails != null) {
-				String[] gameStates = tblGamerDetails.getGameState().split(",");
+			Optional<TblGamerDetails> tblGamerDetails = tblGamerDetailsRepository.findById(gameId);
+			if (tblGamerDetails.isPresent()) {
+				String[] gameStates = tblGamerDetails.get().getGameState().split(",");
 				int[][] boardGame = tickTackToeComponent.mapGameStateToArray(gameStates);
-				return TickTackToeComponent.printBoard(boardGame, tblGamerDetails.getGameStatus());
+				return TickTackToeComponent.printBoard(boardGame, tblGamerDetails.get().getGameStatus());
 			} else {
-				throw new TickTackToeException("InValid Game Id!", HttpStatus.BAD_REQUEST);
+				throw new TickTackToeException("InValid Game Id!", HttpStatus.NOT_FOUND);
 			}
 		} catch (HibernateException ex) {
 			throw new TickTackToeException("Retrieval of game details failed Due To DB Error : " + ex.getMessage(),
@@ -101,7 +103,7 @@ public class TickTackToeService {
 				}
 				return move(gameId, moveDetailsVO, tblGamerDetails);
 			} else {
-				throw new TickTackToeException("InValid Game Id!", HttpStatus.BAD_REQUEST);
+				throw new TickTackToeException("InValid Game Id!", HttpStatus.NOT_FOUND);
 			}
 		} catch (HibernateException ex) {
 			throw new TickTackToeException("Operation failed Due To DB Error : " + ex.getMessage(),
@@ -137,7 +139,7 @@ public class TickTackToeService {
 		int[][] board = tickTackToeComponent.mapGameStateToArray(gameStates);
 		String gameResponseVO = null;
 		if (moveDetailsVO.getColumn() != null && moveDetailsVO.getRow() != null) {
-			String rowColumn = moveDetailsVO.getRow() + moveDetailsVO.getColumn();
+			String rowColumn = moveDetailsVO.getRow().toUpperCase() + moveDetailsVO.getColumn().toUpperCase();
 			if (moveMap.containsKey(rowColumn) && !(moveMap.get(rowColumn) < 0 || moveMap.get(rowColumn) > 8
 					|| board[moveMap.get(rowColumn) / 3][moveMap.get(rowColumn) % 3] != EMPTY)) {
 				user = tblGamerDetails.getGamerCharacter().equalsIgnoreCase("x") ? 1 : 2;

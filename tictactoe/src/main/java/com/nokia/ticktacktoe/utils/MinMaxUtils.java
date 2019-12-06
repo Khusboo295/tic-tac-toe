@@ -19,40 +19,40 @@ public class MinMaxUtils {
 	/**
 	 * MiniMax Algorithm, return each node score
 	 * 
-	 * @param model input ModelUtils module
+	 * @param modelUtils input ModelUtils module
 	 * @param side  player side
 	 * @return evaluation function score
 	 */
-	public static double aiMove(ModelUtils model, int side, int user, int computer) {
-		if (checkWinner(model.getBoard()) != 0) {
-			return evaluate(model, user, computer);
+	public static double computerMove(ModelUtils modelUtils, int side, int user, int computer) {
+		if (checkWinner(modelUtils.getBoard()) != 0) {
+			return evaluate(modelUtils, user, computer);
 		}
 		if (side == computer)
-			return maxScore(side, model, user, computer);
+			return maxScore(side, modelUtils, user, computer);
 		else
-			return minScore(side, model, user, computer);
+			return minScore(side, modelUtils, user, computer);
 	}
 
 	/**
 	 * MaxScore return max score in the node
 	 * 
 	 * @param side  player side
-	 * @param model input ModelUtils module
+	 * @param modelUtils input ModelUtils module
 	 * @return Max score for all current nodes
 	 */
-	private static double maxScore(int side, ModelUtils model, int user, int computer) {
+	private static double maxScore(int side, ModelUtils modelUtils, int user, int computer) {
 		double bestScore = Double.NEGATIVE_INFINITY;
 		int bestMoveIndex = -1;
-		for (Integer Move : model.getAvailableMove()) {
-			ModelUtils copyBoard = model.copyBoard();
+		for (Integer Move : modelUtils.getAvailableMove()) {
+			ModelUtils copyBoard = modelUtils.copyBoard();
 			copyBoard.hashMove(Move, side);
-			double score = aiMove(copyBoard, user, user, computer);
+			double score = computerMove(copyBoard, user, user, computer);
 			if (score >= bestScore) {
 				bestScore = score;
 				bestMoveIndex = Move;
 			}
 		}
-		model.hashMove(bestMoveIndex, side);
+		modelUtils.hashMove(bestMoveIndex, side);
 		return bestScore;
 	}
 
@@ -63,19 +63,19 @@ public class MinMaxUtils {
 	 * @param model input ModelUtils module
 	 * @return Small score for all current nodes
 	 */
-	private static double minScore(int side, ModelUtils model, int user, int computer) {
+	private static double minScore(int side, ModelUtils modelUtils, int user, int computer) {
 		double bestScore = Double.POSITIVE_INFINITY;
 		int bestMoveIndex = -1;
-		for (Integer Move : model.getAvailableMove()) {
-			ModelUtils copyBoard = model.copyBoard();
+		for (Integer Move : modelUtils.getAvailableMove()) {
+			ModelUtils copyBoard = modelUtils.copyBoard();
 			copyBoard.hashMove(Move, side);
-			double score = aiMove(copyBoard, computer, user, computer);
+			double score = computerMove(copyBoard, computer, user, computer);
 			if (score <= bestScore) {
 				bestScore = score;
 				bestMoveIndex = Move;
 			}
 		}
-		model.hashMove(bestMoveIndex, side);
+		modelUtils.hashMove(bestMoveIndex, side);
 		return bestScore;
 	}
 
@@ -84,13 +84,13 @@ public class MinMaxUtils {
 	 * otherwise return 0
 	 * 
 	 * @param side  player side
-	 * @param model input ModelUtils module
+	 * @param modelUtils input ModelUtils module
 	 * @return evaluate score
 	 */
-	private static double evaluate(ModelUtils model, int user, int computer) {
-		if (checkWinner(model.getBoard()) == computer) {
+	private static double evaluate(ModelUtils modelUtils, int user, int computer) {
+		if (checkWinner(modelUtils.getBoard()) == computer) {
 			return 20;
-		} else if (checkWinner(model.getBoard()) == user) {
+		} else if (checkWinner(modelUtils.getBoard()) == user) {
 			return -20;
 		} else {
 			return 0;

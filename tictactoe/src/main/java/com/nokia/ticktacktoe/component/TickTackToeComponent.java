@@ -147,7 +147,7 @@ public class TickTackToeComponent {
 		}
 		modelUtils.setBoard(board);
 		modelUtils.setAvailableMove(availableMoves);
-		MinMaxUtils.aiMove(modelUtils, computer, user, computer);
+		MinMaxUtils.computerMove(modelUtils, computer, user, computer);
 	}
 
 	/**
