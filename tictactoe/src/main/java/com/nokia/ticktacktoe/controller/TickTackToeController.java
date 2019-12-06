@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,7 +76,7 @@ public class TickTackToeController {
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Successfully made move"),
 			@ApiResponse(code = 500, message = "Attempt to make a move failed"),
 			@ApiResponse(code = 404, message = "The API you were trying to reach is not found") })
-	@PostMapping("/game/{gameId}/move")
+	@PutMapping("/game/{gameId}/move")
 	public ResponseEntity<String> makeAMove(@PathVariable Long gameId,
 			@RequestBody @Valid MoveDetailsVO moveDetailsVO) {
 		String gameResponseVO = ticktacktoeService.makeAMove(gameId, moveDetailsVO);
