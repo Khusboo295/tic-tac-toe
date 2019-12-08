@@ -22,7 +22,13 @@ public class AlphaBetaComponent {
 	int uptoDepth = -1;
 	List<PointsAndScores> rootsChildrenScore = new ArrayList<>();
 
-	// evaluate Board
+	/**
+	 * Evaluating Board to calculate the score
+	 * 
+	 * @param user
+	 * @param computer
+	 * @return score
+	 */
 	public int evaluateBoard(int user, int computer) {
 		int score = 0;
 		score = checkAllRows(score, user);
@@ -32,7 +38,17 @@ public class AlphaBetaComponent {
 		return score;
 	}
 
-	// alpha Beta pruning to optimize Minimax algorithm
+	/**
+	 * alpha Beta pruning to optimize Minimax algorithm
+	 * 
+	 * @param alpha
+	 * @param beta
+	 * @param depth
+	 * @param turn
+	 * @param user
+	 * @param computer
+	 * @return min or max value
+	 */
 	public int alphaBetaMinimax(int alpha, int beta, int depth, int turn, int user, int computer) {
 		if (beta <= alpha) {
 			if (turn == computer)
@@ -52,7 +68,11 @@ public class AlphaBetaComponent {
 		return currentScore(alpha, beta, depth, turn, user, computer, pointsAvailable);
 	}
 
-	// returning all available states on board
+	/**
+	 * Returning all available states on board
+	 * 
+	 * @return list of blank points on board
+	 */
 	public List<Point> getAvailableStates() {
 		availablePoints = new ArrayList<>();
 		for (int i = 0; i < 3; ++i) {
@@ -65,12 +85,19 @@ public class AlphaBetaComponent {
 		return availablePoints;
 	}
 
-	// executing move on board
+	/**
+	 * Executing move on board
+	 * @param point
+	 * @param player
+	 */
 	public void placeAMove(Point point, int player) {
 		board[point.getRow()][point.getColumn()] = player;
 	}
 
-	// return Best Move
+	/**
+	 * Calculating Best Move
+	 * @return Best Move
+	 */
 	public Point bestMove() {
 		int max = -100000;
 		int best = -1;
@@ -81,11 +108,15 @@ public class AlphaBetaComponent {
 				best = i;
 			}
 		}
-
 		return rootsChildrenScore.get(best).getPoint();
 	}
 
-	// Check all rows
+	/**
+	 * Check all rows
+	 * @param score
+	 * @param user
+	 * @return score
+	 */
 	private int checkAllRows(int score, int user) {
 		for (int row = 0; row < 3; ++row) {
 			int userCount = 0;
@@ -103,7 +134,12 @@ public class AlphaBetaComponent {
 		return score;
 	}
 
-	// Check all columns
+	/**
+	 * Check all columns
+	 * @param score
+	 * @param user
+	 * @return score
+	 */
 	private int checkAllColumns(int score, int user) {
 		for (int column = 0; column < 3; ++column) {
 			int computerCount = 0;
@@ -120,7 +156,13 @@ public class AlphaBetaComponent {
 		return score;
 	}
 
-	// Check diagonal (first)
+	/**
+	 * Check all diagonal (first)
+	 * @param score
+	 * @param user
+	 * @param computer
+	 * @return score
+	 */
 	private int checkDiagonalFirst(int score, int user, int computer) {
 		int computerCount = 0;
 		int userCount = 0;
@@ -135,7 +177,13 @@ public class AlphaBetaComponent {
 		return score;
 	}
 
-	// Check Diagonal (Second)
+	/**
+	 * Check Diagonal (Second)
+	 * @param score
+	 * @param user
+	 * @param computer
+	 * @return score
+	 */
 	private int checkDiagonalSecond(int score, int user, int computer) {
 		int computerCount = 0;
 		int userCount = 0;
@@ -150,7 +198,12 @@ public class AlphaBetaComponent {
 		return score;
 	}
 
-	// return change in score
+	/**
+	 * Calculate return change in score
+	 * @param computerCount
+	 * @param userCount
+	 * @return change in score
+	 */
 	private int changeInScore(int computerCount, int userCount) {
 		int change;
 		if (computerCount == 3) {
@@ -170,8 +223,18 @@ public class AlphaBetaComponent {
 		}
 		return change;
 	}
-
-	// return Current Score
+ 
+	/**
+	 * Calculate and return Current Score
+	 * @param alpha
+	 * @param beta
+	 * @param depth
+	 * @param turn
+	 * @param user
+	 * @param computer
+	 * @param pointsAvailable
+	 * @return current Score
+	 */
 	private int currentScore(int alpha, int beta, int depth, int turn, int user, int computer,
 			List<Point> pointsAvailable) {
 		if (depth == 0)
