@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.nokia.ticktacktoe.component.AlphaBetaComponent;
 import com.nokia.ticktacktoe.component.TickTackToeComponent;
 import com.nokia.ticktacktoe.domain.TblGamerDetails;
 import com.nokia.ticktacktoe.exception.TickTackToeException;
@@ -99,7 +101,7 @@ public class TickTackToeServiceTest {
 	 */
 	@Test(expected = TickTackToeException.class)
 	public void testGetGameStateNegativeWhenInvalidGameId() {
-		TblGamerDetails tblGamerDetails=null;
+		TblGamerDetails tblGamerDetails = null;
 		when(tblGamerDetailsRepository.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(tblGamerDetails));
 		tickTackToeService.getGameState(1L);
 	}
@@ -116,6 +118,7 @@ public class TickTackToeServiceTest {
 		when(tblGamerDetailsRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(gamerDetails));
 		TickTackToeComponent tickTackToeComponent = new TickTackToeComponent();
 		tickTackToeComponent.setTblGamerDetailsRepository(tblGamerDetailsRepository);
+		tickTackToeComponent.setAlphaBetaComponent(new AlphaBetaComponent());
 		tickTackToeService.setTickTackToeComponent(tickTackToeComponent);
 		StringBuilder expectedGameState = new StringBuilder();
 		expectedGameState.append("").append("   A B C").append("\n").append("A ").append("|").append("x").append("|")

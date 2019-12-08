@@ -6,11 +6,9 @@ import com.nokia.ticktacktoe.constants.ErrorConstants;
 import com.nokia.ticktacktoe.domain.TblGamerDetails;
 import com.nokia.ticktacktoe.exception.TickTackToeException;
 import com.nokia.ticktacktoe.repository.TblGamerDetailsRepository;
-import com.nokia.ticktacktoe.utils.MinMaxUtils;
-import com.nokia.ticktacktoe.utils.ModelUtils;
+import com.nokia.ticktacktoe.utils.CommonUtils;
 import com.nokia.ticktacktoe.vo.GamerDetailsVO;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -33,8 +31,15 @@ public class TickTackToeComponent {
 	@Autowired
 	TblGamerDetailsRepository tblGamerDetailsRepository;
 
+	@Autowired
+	AlphaBetaComponent alphaBetaComponent;
+
 	public void setTblGamerDetailsRepository(TblGamerDetailsRepository tblGamerDetailsRepository) {
 		this.tblGamerDetailsRepository = tblGamerDetailsRepository;
+	}
+
+	public void setAlphaBetaComponent(AlphaBetaComponent alphaBetaComponent) {
+		this.alphaBetaComponent = alphaBetaComponent;
 	}
 
 	/**
@@ -50,22 +55,6 @@ public class TickTackToeComponent {
 		tblGamerDetails.setGameState(CommonConstants.INITIAL_BOARD_STATE);
 		tblGamerDetails.setGameStatus(CommonConstants.INITIAL_BOARD_STATUS);
 		return tblGamerDetails;
-	}
-
-	/**
-	 * Return an X or O, depending upon whose move it was
-	 * 
-	 * @param charNum contains 1 if 'x' OR 2 id 'o'
-	 * @return game character
-	 */
-	public static String printChar(int charNum) {
-		if (1 == charNum) {
-			return "x";
-		} else if (2 == charNum) {
-			return "o";
-		} else {
-			return " ";
-		}
 	}
 
 	/**
@@ -102,7 +91,7 @@ public class TickTackToeComponent {
 		if (turn == user) {
 			board[(int) (move / 3)][move % 3] = turn;
 		}
-		winner = MinMaxUtils.checkWinner(board);
+		winner = CommonUtils.checkWinner(board);
 		String gameStatus = CommonConstants.GAME_ONGOING_STATUS;
 		if (winner != CommonConstants.NONE) {
 			if (winner == user) {
@@ -133,19 +122,31 @@ public class TickTackToeComponent {
 	 * @param user     for user player
 	 * @param computer for computer player
 	 */
-	public static void computerMove(int[][] board, int user, int computer) {
-		ModelUtils modelUtils = new ModelUtils();
-		ArrayList<Integer> availableMoves = (ArrayList<Integer>) modelUtils.getAvailableMove();
-		for (int row = 0; row < board.length; row++) {
-			for (int column = 0; column < board[0].length; column++) {
-				if (board[row][column] != 0) {
-					availableMoves.remove(Integer.valueOf(row * board.length + column));
-				}
+	public void computerMove(int[][] board, int user, int computer) {
+		alphaBetaComponent.setBoard(board);
+		alphaBetaComponent.alphaBetaMinimax(Integer.MIN_VALUE, Integer.MAX_VALUE, 0, computer, user, computer);
+		alphaBetaComponent.placeAMove(alphaBetaComponent.bestMove(), computer);
+	}
+
+	/**
+	 * Maps current game state to array
+	 * 
+	 * @param gameStates current status of game
+	 * @return current game board
+	 */
+	public int[][] mapGameStateToArray(String[] gameStates) {
+		final int[] pos = { 0, 0 };
+		int[][] boardGame = new int[3][3];
+		Arrays.stream(gameStates).forEach(z -> {
+			boardGame[pos[0]][pos[1]] = Integer.parseInt(z);
+			if (pos[1] < 2) {
+				pos[1] = pos[1] + 1;
+			} else {
+				pos[0] = pos[0] + 1;
+				pos[1] = 0;
 			}
-		}
-		modelUtils.setBoard(board);
-		modelUtils.setAvailableMove(availableMoves);
-		MinMaxUtils.computerMove(modelUtils, computer, user, computer);
+		});
+		return boardGame;
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class TickTackToeComponent {
 	 * @param gameStatus current status of game
 	 * @param id         containing game id
 	 */
-	public void updateGamerDetails(int[][] board, String gameStatus, Long id) {
+	private void updateGamerDetails(int[][] board, String gameStatus, Long id) {
 		Optional<TblGamerDetails> tblGamerDetails = tblGamerDetailsRepository.findById(id);
 		if (tblGamerDetails.isPresent()) {
 			StringBuilder gameState = new StringBuilder();
@@ -178,23 +179,18 @@ public class TickTackToeComponent {
 	}
 
 	/**
-	 * Maps current game state to array
+	 * Return an X or O, depending upon whose move it was
 	 * 
-	 * @param gameStates current status of game
-	 * @return current game board
+	 * @param charNum contains 1 if 'x' OR 2 id 'o'
+	 * @return game character
 	 */
-	public int[][] mapGameStateToArray(String[] gameStates) {
-		final int[] pos = { 0, 0 };
-		int[][] boardGame = new int[3][3];
-		Arrays.stream(gameStates).forEach(z -> {
-			boardGame[pos[0]][pos[1]] = Integer.parseInt(z);
-			if (pos[1] < 2) {
-				pos[1] = pos[1] + 1;
-			} else {
-				pos[0] = pos[0] + 1;
-				pos[1] = 0;
-			}
-		});
-		return boardGame;
+	private static String printChar(int charNum) {
+		if (1 == charNum) {
+			return "x";
+		} else if (2 == charNum) {
+			return "o";
+		} else {
+			return " ";
+		}
 	}
 }

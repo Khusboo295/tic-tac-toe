@@ -3,6 +3,7 @@ Welcome to the TickTackToe Game, a simple web application allowing users to inte
 
 # Approach applied for developing this project
 * Min-Max Algorithm for smart computer move
+* Alpha-Beta pruning for performance optimization of Min-Max Algorithm
 * AOP for logging
 * Custom Annotations for logging and validation
 * Sonar Lint for Code Quality Analysis
