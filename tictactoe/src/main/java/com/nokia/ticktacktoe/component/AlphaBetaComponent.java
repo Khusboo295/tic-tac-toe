@@ -64,6 +64,8 @@ public class AlphaBetaComponent {
 		List<Point> pointsAvailable = getAvailableStates();
 		if (pointsAvailable.isEmpty())
 			return 0;
+		if (depth == 0)
+			rootsChildrenScore.clear();
 
 		return currentScore(alpha, beta, depth, turn, user, computer, pointsAvailable);
 	}
@@ -87,6 +89,7 @@ public class AlphaBetaComponent {
 
 	/**
 	 * Executing move on board
+	 * 
 	 * @param point
 	 * @param player
 	 */
@@ -96,6 +99,7 @@ public class AlphaBetaComponent {
 
 	/**
 	 * Calculating Best Move
+	 * 
 	 * @return Best Move
 	 */
 	public Point bestMove() {
@@ -113,57 +117,67 @@ public class AlphaBetaComponent {
 
 	/**
 	 * Check all rows
+	 * 
 	 * @param score
 	 * @param user
 	 * @return score
 	 */
 	private int checkAllRows(int score, int user) {
 		for (int row = 0; row < 3; ++row) {
+			int blank = 0;
 			int userCount = 0;
 			int computerCount = 0;
 			for (int column = 0; column < 3; ++column) {
-				if (board[row][column] == user) {
+				if (board[row][column] == 0) {
+					blank++;
+				} else if (board[row][column] == user) {
 					userCount++;
 				} else {
 					computerCount++;
 				}
 
 			}
-			score += changeInScore(computerCount, userCount);
+			score += changeInScore(computerCount, userCount, blank);
 		}
 		return score;
 	}
 
 	/**
 	 * Check all columns
+	 * 
 	 * @param score
 	 * @param user
 	 * @return score
 	 */
 	private int checkAllColumns(int score, int user) {
 		for (int column = 0; column < 3; ++column) {
+			int blank = 0;
 			int computerCount = 0;
 			int userCount = 0;
 			for (int row = 0; row < 3; ++row) {
-				if (board[row][column] == user) {
+				if (board[row][column] == 0) {
+					blank++;
+				} else if (board[row][column] == user) {
 					userCount++;
 				} else {
 					computerCount++;
 				}
 			}
-			score += changeInScore(computerCount, userCount);
+			score += changeInScore(computerCount, userCount, blank);
 		}
 		return score;
 	}
 
 	/**
 	 * Check all diagonal (first)
+	 * 
 	 * @param score
 	 * @param user
 	 * @param computer
 	 * @return score
 	 */
 	private int checkDiagonalFirst(int score, int user, int computer) {
+		int blank = 0;
 		int computerCount = 0;
 		int userCount = 0;
 		for (int row = 0, column = 0; row < 3; ++row, ++column) {
@@ -171,20 +185,24 @@ public class AlphaBetaComponent {
 				userCount++;
 			} else if (board[row][column] == computer) {
 				computerCount++;
+			} else {
+				blank++;
 			}
 		}
-		score += changeInScore(computerCount, userCount);
+		score += changeInScore(computerCount, userCount, blank);
 		return score;
 	}
 
 	/**
 	 * Check Diagonal (Second)
+	 * 
 	 * @param score
 	 * @param user
 	 * @param computer
 	 * @return score
 	 */
 	private int checkDiagonalSecond(int score, int user, int computer) {
+		int blank = 0;
 		int computerCount = 0;
 		int userCount = 0;
 		for (int row = 2, column = 0; row > -1; --row, ++column) {
@@ -192,19 +210,23 @@ public class AlphaBetaComponent {
 				userCount++;
 			} else if (board[row][column] == computer) {
 				computerCount++;
+			} else {
+				blank++;
 			}
 		}
-		score += changeInScore(computerCount, userCount);
+		score += changeInScore(computerCount, userCount, blank);
 		return score;
 	}
 
 	/**
 	 * Calculate return change in score
+	 * 
 	 * @param computerCount
 	 * @param userCount
 	 * @return change in score
 	 */
-	private int changeInScore(int computerCount, int userCount) {
+	private int changeInScore(int computerCount, int userCount, int blank) {
+		blank = 0;
 		int change;
 		if (computerCount == 3) {
 			change = 100;
@@ -223,9 +245,10 @@ public class AlphaBetaComponent {
 		}
 		return change;
 	}
- 
+
 	/**
 	 * Calculate and return Current Score
+	 * 
 	 * @param alpha
 	 * @param beta
 	 * @param depth
@@ -237,9 +260,6 @@ public class AlphaBetaComponent {
 	 */
 	private int currentScore(int alpha, int beta, int depth, int turn, int user, int computer,
 			List<Point> pointsAvailable) {
-		if (depth == 0)
-			rootsChildrenScore.clear();
-
 		int maxValue = Integer.MIN_VALUE;
 		int minValue = Integer.MAX_VALUE;
 
